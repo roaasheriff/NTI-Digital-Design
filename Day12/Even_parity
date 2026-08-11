@@ -1,0 +1,29 @@
+module even_parity(
+    input wire clk,
+    input wire rst,
+    input wire serial_in,
+    output reg parity_out 
+);
+
+reg [7:0] shift_register;
+
+function parity(input [7:0] in);
+integer i;
+begin
+parity=0;
+for(i=0;i<=7;i=i+1)
+parity=^in;
+end
+endfunction
+
+always @(posedge clk ) begin
+    if(rst) begin shift_register<=8'b0; parity_out<=0; end
+    else begin
+        shift_register<={serial_in,shift_register[7:1]};
+        parity_out=parity(shift_register);
+    end
+end
+    
+
+    
+endmodule
